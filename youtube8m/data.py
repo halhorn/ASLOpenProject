@@ -1,4 +1,10 @@
 import tensorflow as tf
+CLASS_NUM = 3862
+
+
+def multi_hot(indices):
+    return tf.reduce_sum(tf.one_hot(indices, CLASS_NUM), axis=0)
+
 
 def parse_row(row):
     context_features = {
@@ -8,8 +14,13 @@ def parse_row(row):
         "mean_audio": tf.VarLenFeature(tf.float32)
     }
     data, _ = tf.parse_single_sequence_example(row, context_features)
-    label = data.pop('labels')
-    return data, label
+    label = multi_hot(tf.sparse.to_dense(data['labels']))
+    features = {
+        'id': data['id'],
+        'mean_rgb': tf.sparse.to_dense(data['mean_rgb']),
+        'mean_audio': tf.sparse.to_dense(data['mean_audio']),
+    }
+    return features, label
 
 
 def read_dataset(files_pattern, mode, batch_size=128):
