@@ -32,7 +32,11 @@ def parse_row(row):
 
 def read_dataset(files_pattern, mode, batch_size=128):
     tffiles = tf.io.gfile.glob(files_pattern)
-    dataset = tf.data.TFRecordDataset(tffiles).map(parse_row).cache()
+    dataset = tf.data.TFRecordDataset(tffiles)
+    dataset = dataset.map(
+        parse_row,
+        num_parallel_calls=tf.data.experimental.AUTOTUNE
+    ).cache()
     if mode == tf.estimator.ModeKeys.TRAIN:
         dataset = dataset.shuffle(batch_size*10).repeat().batch(batch_size)
     else:
