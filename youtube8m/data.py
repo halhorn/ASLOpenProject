@@ -1,5 +1,7 @@
 import tensorflow as tf
 CLASS_NUM = 3862
+RGB_DIM = 1024
+AUDIO_DIM = 128
 
 
 def multi_hot(indices):
@@ -15,10 +17,15 @@ def parse_row(row):
     }
     data, _ = tf.parse_single_sequence_example(row, context_features)
     label = multi_hot(tf.sparse.to_dense(data['labels']))
+    label.set_shape([CLASS_NUM])
+    mean_rgb = tf.sparse.to_dense(data['mean_rgb'])
+    mean_rgb.set_shape([RGB_DIM])
+    mean_audio = tf.sparse.to_dense(data['mean_audio'])
+    mean_audio.set_shape([AUDIO_DIM])
     features = {
         'id': data['id'],
-        'mean_rgb': tf.sparse.to_dense(data['mean_rgb']),
-        'mean_audio': tf.sparse.to_dense(data['mean_audio']),
+        'mean_rgb': mean_rgb,
+        'mean_audio': mean_audio,
     }
     return features, label
 
