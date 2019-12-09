@@ -19,16 +19,18 @@ pipenv install
 ## airflowの環境構築
 以下のようなパイプラインを構築するためairflowを使って該当サービスをオーケストレーションします。
 
-1. GCS or BigQueryに保存してあるデータを抽出しDataFlowで前処理
+1. BigQueryに保存してあるデータを抽出しDataFlowで前処理
 2. ML Engineにジョブを投げてモデルを学習
 3. モデルのデプロイ
 
 初回のみ
 ```bash
+ansible-vault decrypt ./airflow/config/.secrets.conf
+
 ./airflow/script/create_environment.sh
 ```
 
-dagファイルのデプロイ
+Airflow/DataFlow実行ファイルのデプロイ
 ```bash
 ./airflow/script/deploy.sh
 ```
