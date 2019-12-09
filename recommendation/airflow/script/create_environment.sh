@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-ENVIRONMENT_NAME=YOUR_ENVIRONMENT_NAME
+ENVIRONMENT_NAME=dev-recommendation
 LOCATION=us-central1
 
 # 変数を読み込む
-# 実際は暗号化しておいて復号後読み込むようにする
 eval `cat airflow/config/.secrets.conf`
 echo ${slack_access_token}
 
@@ -14,9 +13,9 @@ gcloud composer environments create ${ENVIRONMENT_NAME} \
     --python-version 3
 
 # airflowの環境にライブラリーをインストール
-gcloud composer environments update ENVIRONMENT-NAME \\
---update-pypi-packages-from-file airflow/config/requirements.txt \\
---location LOCATION
+gcloud composer environments update ${ENVIRONMENT_NAME} \
+--update-pypi-packages-from-file airflow/config/requirements.txt \
+--location ${LOCATION}
 
 
 gcloud composer environments run \
