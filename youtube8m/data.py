@@ -5,7 +5,7 @@ AUDIO_DIM = 128
 
 
 def multi_hot(indices):
-    return tf.reduce_sum(tf.one_hot(indices, CLASS_NUM), axis=0)
+    return tf.reduce_sum(tf.one_hot(indices, CLASS_NUM), axis=-2)
 
 
 def parse_row(row):
