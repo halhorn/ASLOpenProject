@@ -5,7 +5,7 @@ AUDIO_DIM = 128
 
 
 def multi_hot(indices):
-    return tf.reduce_sum(tf.one_hot(indices, CLASS_NUM), axis=0)
+    return tf.reduce_sum(tf.one_hot(indices, CLASS_NUM), axis=-2)
 
 
 def parse_row(row):
@@ -32,9 +32,9 @@ def parse_row(row):
 
 def read_dataset(files_pattern, mode, batch_size=128):
     tffiles = tf.io.gfile.glob(files_pattern)
-    dataset = tf.data.TFRecordDataset(tffiles).map(parse_row)
+    dataset = tf.data.TFRecordDataset(tffiles).map(parse_row).cache()
     if mode == tf.estimator.ModeKeys.TRAIN:
         dataset = dataset.shuffle(batch_size*10).repeat().batch(batch_size)
     else:
         dataset = dataset.repeat(1).batch(batch_size)
-    return dataset
+    return dataset.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
