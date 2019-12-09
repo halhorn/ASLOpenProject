@@ -1,15 +1,7 @@
 from typing import Dict
-from data import read_dataset
-
-
-def create_model(params):
-    model_map = {
-        'linear': LinearModel,
-        'dnn': DNNModel,
-    }
-    print('----------------------------------')
-    print('Model:', params['model'])
-    return model_map[params['model']](params)
+import tensorflow as tf
+from .data import read_dataset, CLASS_NUM
+from .models import create_model
 
 
 def multi_hot(indices):

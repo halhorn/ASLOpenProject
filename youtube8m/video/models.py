@@ -2,6 +2,19 @@
 各種モデルを実装します。
 各モデルは tf.keras.models.Model を継承し、 call で logits を返します。
 '''
+import tensorflow as tf
+from .data import CLASS_NUM
+
+
+def create_model(params):
+    model_map = {
+        'linear': LinearModel,
+        'dnn': DNNModel,
+    }
+    print('----------------------------------')
+    print('Model:', params['model'])
+    return model_map[params['model']](params)
+
 
 class LinearModel(tf.keras.models.Model):
     def __init__(self, params, *args, **kwargs):
