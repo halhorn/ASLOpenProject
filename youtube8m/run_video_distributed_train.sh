@@ -1,5 +1,5 @@
 #!/bin/sh
-JOBNAME=youtube8m_dist_nocache_$(date -u +%y%m%d_%H%M%S)
+JOBNAME=youtube8m_$(date -u +%y%m%d_%H%M%S)
 BUCKET=asl-mixi-project-bucket
 OUTDIR=gs://$BUCKET/model/youtube8m/video/auc/$(date -u +%y%m%d_%H%M%S)
 
