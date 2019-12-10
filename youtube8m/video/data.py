@@ -36,7 +36,7 @@ def read_dataset(files_pattern, mode, batch_size=128):
     dataset = dataset.map(
         parse_row,
         num_parallel_calls=tf.data.experimental.AUTOTUNE
-    ).cache()
+    )
     if mode == tf.estimator.ModeKeys.TRAIN:
         dataset = dataset.shuffle(batch_size*10).repeat().batch(batch_size)
     else:
