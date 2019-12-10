@@ -92,7 +92,7 @@ def serving_input_fn():
 
 
 def train_and_evaluate(output_dir: str, params: Dict) -> None:
-    tf.summary.FileWriterCache.clear()
+    tf.compat.v1.summary.FileWriterCache.clear()
     eval_interval_step = params.get('eval_interval_step', 1000)
 
     config = tf.estimator.RunConfig(
@@ -112,7 +112,7 @@ def train_and_evaluate(output_dir: str, params: Dict) -> None:
             tf.estimator.ModeKeys.TRAIN,
             batch_size,
         ),
-        max_steps=params.get('train_steps', 10000),
+        max_steps=params.get('train_steps', 30000),
     )
     exporter = tf.estimator.LatestExporter(
         name='exporter', 

@@ -19,6 +19,7 @@ def execute():
     parser.add_argument('--batch_size', type=int)
     parser.add_argument('--learning_rate', type=float)
     parser.add_argument('--train_steps', type=int)
+    parser.add_argument('--eval_interval_step', type=int)
 
     parser.add_argument(
         '--job-dir',

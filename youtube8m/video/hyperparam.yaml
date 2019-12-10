@@ -1,5 +1,5 @@
 trainingInput:
-  scaleTier: STANDARD_1
+  scaleTier: BASIC_GPU
   hyperparameters:
     hyperparameterMetricTag: auc
     goal: MAXIMIZE
@@ -24,7 +24,7 @@ trainingInput:
       scaleType: UNIT_LINEAR_SCALE
     - parameterName: kernel_regularizer
       type: DOUBLE
-      minValue: 0.0
+      minValue: 0.00001
       maxValue: 0.1
       scaleType: UNIT_LOG_SCALE
       
