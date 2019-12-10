@@ -6,7 +6,7 @@ trainingInput:
 
 # シングルでうごかす場合
   masterType: n1-highmem-8
-  workerConfig:
+  masterConfig:
     acceleratorConfig:
       count: 1
       type: NVIDIA_TESLA_V100
