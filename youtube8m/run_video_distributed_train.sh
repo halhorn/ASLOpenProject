@@ -14,5 +14,5 @@ gcloud ai-platform jobs submit training $JOBNAME \
        --eval_data_path=gs://$BUCKET/data/youtube-8m/valid/*.tfrecord \
        --output_dir=${OUTDIR} \
        --model=dnn \
-       --train_steps=30000
+       --train_steps=200000
 
