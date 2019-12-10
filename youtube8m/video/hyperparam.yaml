@@ -1,5 +1,31 @@
 trainingInput:
-  scaleTier: BASIC_GPU
+  pythonModule: 'video.task'
+  pythonVersion: '3.5'
+  runtimeVersion: '1.14'
+  scaleTier: CUSTOM
+
+# シングルでうごかす場合
+  masterType: n1-highmem-8
+  workerConfig:
+    acceleratorConfig:
+      count: 1
+      type: NVIDIA_TESLA_V100
+
+# 分散学習をする場合
+#  masterType: n1-standard-4
+#  workerCount: 4
+#  workerType: n1-highmem-8
+#  workerConfig:
+#    acceleratorConfig:
+#      count: 1
+#      type: NVIDIA_TESLA_P100
+#  parameterServerCount: 1
+#  parameterServerConfig:
+#    acceleratorConfig:
+#      count: 1
+#      type: NVIDIA_TESLA_K80
+#  parameterServerType: n1-highmem-8
+
   hyperparameters:
     hyperparameterMetricTag: auc
     goal: MAXIMIZE
@@ -10,12 +36,12 @@ trainingInput:
     - parameterName: layer_num
       type: INTEGER
       minValue: 0
-      maxValue: 16
+      maxValue: 6
       scaleType: UNIT_LINEAR_SCALE
     - parameterName: hidden_dim
       type: INTEGER
       minValue: 64
-      maxValue: 2048
+      maxValue: 1024
       scaleType: UNIT_LOG_SCALE
     - parameterName: dropout
       type: DOUBLE
@@ -31,7 +57,7 @@ trainingInput:
     - parameterName: batch_size
       type: INTEGER
       minValue: 128
-      maxValue: 1024
+      maxValue: 512
       scaleType: UNIT_LOG_SCALE
     - parameterName: learning_rate
       type: DOUBLE
