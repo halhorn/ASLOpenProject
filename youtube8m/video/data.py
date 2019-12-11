@@ -1,51 +1,12 @@
-import csv
 import tensorflow as tf
+from .category_util import get_id_category_id_table, CATEGORIES, CATEGORY_NUM
 
 CLASS_NUM = 3862
 
 RGB_DIM = 1024
 AUDIO_DIM = 128
-
-CATEGORIES = [
-    '(Unknown)',
-    'Arts & Entertainment',
-    'Autos & Vehicles',
-    'Beauty & Fitness',
-    'Books & Literature',
-    'Business & Industrial',
-    'Computers & Electronics',
-    'Finance',
-    'Food & Drink',
-    'Games',
-    'Health',
-    'Hobbies & Leisure',
-    'Home & Garden',
-    'Internet & Telecom',
-    'Jobs & Education',
-    'Law & Government',
-    'News',
-    'People & Society',
-    'Pets & Animals',
-    'Real Estate',
-    'Reference',
-    'Science',
-    'Shopping',
-    'Sports',
-    'Travel',
-]
-CATEGORY_NUM = len(CATEGORIES)
-
-def category2id(category_name):
-    id_ = CATEGORIES.index(category_name)
-    assert id_ >= 0
-    return id_
-
-id_category_id_table = [0] * CLASS_NUM
-with open('./vocabulary.csv', 'r') as c:
-    reader = csv.reader(c)
-    next(reader)
-    for r in reader:
-        id_category_id_table[int(r[0])] = category2id(r[5])
+id_category_id_table = get_id_category_id_table(CLASS_NUM)
+print(id_category_id_table)
 
 def multi_hot(indices, class_num):
     return tf.reduce_sum(tf.one_hot(indices, class_num), axis=-2)
