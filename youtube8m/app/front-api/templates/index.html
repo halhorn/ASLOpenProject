@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+  <div id=header>
+    <div id=logo background-color="red" color="white">▲</div>
+    <div id=title>ASLTube</div>
+    <div class=clear></div>
+  </div>
+  <div id=videoContainer>
+    <video id="video" width="640" src="{{ recent.public_url }}" type="video/mov" controls></video> </div>
+    <p><a href="{{ recent.public_url }}">{{ recent.filename }}</a></p>
+    <div>
+    <ul>
+    {% for pred in recent.predictions %}
+      <li>{{ pred.label }}({{ pred.probability }})</li>
+    {% endfor %}
+    </ul>
+    </div>
+  <div/>
+  <div id="app">
+    <div v-if="video">
+      [[videoName]]
+      <button v-bind:disabled="buttonDisabled" @click="removeVideo">Remove video</button>
+      <button v-bind:disabled="buttonDisabled" @click="submitVideo">Submit video</button>
+    </div>
+    <div v-else>
+      <input type="file" @change="onFileChange">
+    </div>
+  </div>
+
+  <div id="oldList">
+  {% for elem in vlist if elem.job_id != recent.job_id %}
+     <div>
+       <a href="/show/{{ elem.job_id }}">{{ elem.filename }}</a>
+       {% for epred in elem.predictions %}
+         <span>{{ epred.label }}</span>
+       {% endfor %}
+     </div>
+  {% endfor %}
+  </div>
+</body>
+<style>
+#oldList {
+  margin-top: 20px;
+}
+#logo {
+  color: white;
+  background-color: red;
+  font-weight: bold;
+  font-size: 4px;
+  width: 11px;
+  margin: 5px 0px;
+  padding: 0px 8px;
+  float: left;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+#title {
+  color: #333333;;
+  font-size: 16px;
+  padding-top: 4px;
+  float: left;
+  font-family: Impact, Tahoma, Segoe, sans-serif;
+  font-weight: bold;
+  margin-left: 2px;
+}
+.clear {
+  clear: both;
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+<script>
+var app = new Vue({
+    el: '#app',
+    data: {
+        video: '',
+        videoName: '',
+        uploadFile: '',
+        buttonDisabled: false
+    },
+    delimiters: ['[[', ']]'],
+    methods: {
+        onFileChange: function(e){
+            var files = e.target.files || e.dataTransfer.files;
+            if (!files.length) {
+                return;
+            }
+            if (!files[0].type.match('video.*')) {
+                return;
+            }
+            this.createVideo(files[0]);
+            this.uploadFile = files[0];
+        },
+        createVideo(file) {
+            var reader = new FileReader();
+            var vm = this;
+            reader.onload = function(e) {
+                vm.video = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            vm.videoName = file.name;
+        },
+        removeVideo: function(e) {
+            this.video = '';
+            this.videoName = '';
+        },
+        submitVideo: function(e) {
+            if (!this.buttonDisabled) {
+                this.buttonDisabled = true
+                var formData = new FormData();
+                formData.append('video', this.uploadFile);
+                var config = {
+                    headers: {
+                        'content-type': 'multipart/form-data'
+                    }
+                };
+                axios
+                    .post('/upload', formData, config)
+                    .then(function(response) {
+                        console.log(response);
+                        // response 処理
+                    })
+                    .catch(function(error) {
+                        // error 処理
+                    })
+                this.buttonDisabled = false
+            }
+        }
+    },
+});
+</script>
+</html>
