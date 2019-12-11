@@ -40,6 +40,18 @@ def create_sub_metrics(probabilities, labels, params, name):
     return metrics
 
 
+def create_prediction(probabilities, params):
+    tag_prob, cat_prob = tf.split(probabilities, [CLASS_NUM, CATEGORY_NUM], axis=-1)
+    prediction = create_sub_prediction(tag_prob, params)
+    prediction.update(create_sub_prediction(cat_prob, params, prefix='category_'))
+    return prediction
+
+def create_sub_prediction(probabilities, params, prefix=''):
+    return {
+        prefix + 'probabilities': probabilities,
+        prefix + 'predicted_topk': tf.math.top_k(probabilities, k=params.get('top_k', 5)).indices,
+    }
+
 def model_fn(
     features: Dict[str, tf.Tensor],
     labels: tf.Tensor,
@@ -83,15 +95,11 @@ def model_fn(
 
     return tf.estimator.EstimatorSpec(
         mode=mode,
-        predictions={
-            'probabilities': probabilities,
-            'predicted_topk': tf.math.top_k(probabilities, k=params.get('top_k', 5)).indices,
-        },
+        predictions=create_prediction(probabilities, params),
         loss=loss,
         train_op=train_op,
         eval_metric_ops=eval_metric_ops,
     )
-
 
 def serving_input_fn():
     feature_placeholders = {
