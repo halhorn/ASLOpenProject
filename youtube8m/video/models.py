@@ -19,7 +19,7 @@ def create_model(params):
 class LinearModel(tf.keras.models.Model):
     def __init__(self, params, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.output_dense = tf.keras.layers.Dense(CLASS_NUM)
+        self.output_dense = tf.keras.layers.Dense(params.get('output_dim', CLASS_NUM))
     
     def call(self, visual_feature, audio_feature):
         '''
@@ -46,7 +46,7 @@ class DNNModel(tf.keras.models.Model):
             for i in range(layer_num)
         ]
         self.dropout_layers = [tf.keras.layers.Dropout(dropout) for i in range(layer_num)]
-        self.output_dense = tf.keras.layers.Dense(CLASS_NUM)
+        self.output_dense = tf.keras.layers.Dense(params.get('output_dim', CLASS_NUM))
         
     def call(self, visual_feature, audio_feature):
         '''

@@ -1,7 +1,7 @@
 #!/bin/sh
 JOBNAME=youtube8m_$1_$(date -u +%y%m%d_%H%M%S)
 BUCKET=asl-mixi-project-bucket
-OUTDIR=gs://$BUCKET/model/youtube8m/video/auc/$(date -u +%y%m%d_%H%M%S)
+OUTDIR=gs://$BUCKET/model/youtube8m/video/auc_$1/$(date -u +%y%m%d_%H%M%S)
 
 gcloud ai-platform jobs submit training $JOBNAME \
        --region='us-central1' \
@@ -14,5 +14,5 @@ gcloud ai-platform jobs submit training $JOBNAME \
        --eval_data_path=gs://$BUCKET/data/youtube-8m/valid/*.tfrecord \
        --output_dir=${OUTDIR} \
        --model=dnn \
-       --train_steps=200000
+       --train_steps=100000
 

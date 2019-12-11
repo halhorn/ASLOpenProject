@@ -64,3 +64,8 @@ trainingInput:
       minValue: 0.00001
       maxValue: 0.1
       scaleType: UNIT_LOG_SCALE
+    - parameterName: category_weight
+      type: DOUBLE
+      minValue: 0.00001
+      maxValue: 2.0
+      scaleType: UNIT_LINEAR_SCALE
