@@ -69,7 +69,6 @@ def model_fn(
     eval_metric_ops = None
 
     if mode == tf.estimator.ModeKeys.TRAIN or mode == tf.estimator.ModeKeys.EVAL:
-        # Convert string label to int
         cross_entropy = tf.nn.sigmoid_cross_entropy_with_logits(  # [batch, class + category]
             labels=labels,
             logits=logits,
