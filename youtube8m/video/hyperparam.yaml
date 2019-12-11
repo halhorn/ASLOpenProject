@@ -8,8 +8,8 @@ trainingInput:
   masterType: n1-highmem-8
   masterConfig:
     acceleratorConfig:
-      count: 1
-      type: NVIDIA_TESLA_V100
+      count: 2
+      type: NVIDIA_TESLA_P100
 
 # 分散学習をする場合
 #  masterType: n1-standard-4
@@ -36,12 +36,12 @@ trainingInput:
     - parameterName: layer_num
       type: INTEGER
       minValue: 0
-      maxValue: 6
+      maxValue: 8
       scaleType: UNIT_LINEAR_SCALE
     - parameterName: hidden_dim
       type: INTEGER
       minValue: 64
-      maxValue: 1024
+      maxValue: 2048
       scaleType: UNIT_LOG_SCALE
     - parameterName: dropout
       type: DOUBLE
@@ -57,7 +57,7 @@ trainingInput:
     - parameterName: batch_size
       type: INTEGER
       minValue: 128
-      maxValue: 512
+      maxValue: 1024
       scaleType: UNIT_LOG_SCALE
     - parameterName: learning_rate
       type: DOUBLE
