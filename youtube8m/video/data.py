@@ -6,7 +6,6 @@ CLASS_NUM = 3862
 RGB_DIM = 1024
 AUDIO_DIM = 128
 id_category_id_table = get_id_category_id_table(CLASS_NUM)
-print(id_category_id_table)
 
 def multi_hot(indices, class_num):
     return tf.reduce_sum(tf.one_hot(indices, class_num), axis=-2)
