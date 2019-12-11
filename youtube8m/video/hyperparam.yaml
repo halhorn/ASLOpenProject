@@ -29,7 +29,7 @@ trainingInput:
   hyperparameters:
     hyperparameterMetricTag: auc
     goal: MAXIMIZE
-    maxTrials: 40
+    maxTrials: 80
     maxParallelTrials: 5
     enableTrialEarlyStopping: True
     params:
