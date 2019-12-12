@@ -21,6 +21,7 @@ CACHE_VOCABULARY = '/tmp/vocabulary.csv'
 VOCABULARY_PATH = 'data/youtube-8m/vocabulary.csv'
 CACHE_VIDEO_INFO = '/tmp/video_info.json'
 VIDEO_INFO_PATH = 'data/youtube-8m/video_info.json'
+THRESHOLD = 0.2
 
 app = Flask(__name__)
 
@@ -63,7 +64,7 @@ def get_prediction(feature):
     parent = "projects/{}/models/{}/versions/{}".format(PROJECT, MODEL_NAME, MODEL_VERSION)
     response = api.projects().predict(body = request_data, name = parent).execute()
     print(response)
-  
+
     prediction = response['predictions'][0]
     results = []
     for i, index in enumerate(prediction["predicted_topk"]):
@@ -104,6 +105,9 @@ def show(job_id):
     for e in video_info["list"]:
         if e["job_id"] == job_id:
             recent = e
+            for pred in recent['predictions']:
+                pred['btn_class'] = 'btn-primary' if pred['probability'] > THRESHOLD else 'btn-secondary'
+                pred['bar_length'] = int(pred['probability'] * 100)
             break
     return render_template('index.html', recent=recent, vlist=video_info["list"])
 
