@@ -1,0 +1,27 @@
+trainingInput:
+  pythonModule: 'frame.task'
+  pythonVersion: '3.5'
+  runtimeVersion: '1.14'
+  scaleTier: CUSTOM
+
+# シングルでうごかす場合
+  masterType: n1-highmem-8
+  masterConfig:
+    acceleratorConfig:
+      count: 1
+      type: NVIDIA_TESLA_V100
+
+# 分散学習をする場合
+#  masterType: n1-standard-4
+#  workerCount: 4
+#  workerType: n1-highmem-8
+#  workerConfig:
+#    acceleratorConfig:
+#      count: 1
+#      type: NVIDIA_TESLA_P100
+#  parameterServerCount: 1
+#  parameterServerConfig:
+#    acceleratorConfig:
+#      count: 1
+#      type: NVIDIA_TESLA_K80
+#  parameterServerType: n1-highmem-8
