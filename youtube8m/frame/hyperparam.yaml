@@ -1,0 +1,76 @@
+trainingInput:
+  pythonModule: 'frame.task'
+  pythonVersion: '3.5'
+  runtimeVersion: '1.14'
+  scaleTier: CUSTOM
+
+# シングルでうごかす場合
+  masterType: n1-highmem-8
+  masterConfig:
+    acceleratorConfig:
+      count: 1
+      type: NVIDIA_TESLA_V100
+
+# 分散学習をする場合
+#  masterType: n1-standard-4
+#  workerCount: 4
+#  workerType: n1-highmem-8
+#  workerConfig:
+#    acceleratorConfig:
+#      count: 1
+#      type: NVIDIA_TESLA_P100
+#  parameterServerCount: 1
+#  parameterServerConfig:
+#    acceleratorConfig:
+#      count: 1
+#      type: NVIDIA_TESLA_K80
+#  parameterServerType: n1-highmem-8
+
+  hyperparameters:
+    hyperparameterMetricTag: auc
+    goal: MAXIMIZE
+    maxTrials: 40
+    maxParallelTrials: 5
+    enableTrialEarlyStopping: True
+    params:
+    - parameterName: pre_layer_num
+      type: INTEGER
+      minValue: 0
+      maxValue: 6
+      scaleType: UNIT_LINEAR_SCALE
+    - parameterName: layer_num
+      type: INTEGER
+      minValue: 0
+      maxValue: 4
+      scaleType: UNIT_LINEAR_SCALE
+    - parameterName: hidden_dim
+      type: INTEGER
+      minValue: 64
+      maxValue: 512
+      scaleType: UNIT_LINEAR_SCALE
+    - parameterName: dropout
+      type: DOUBLE
+      minValue: 0.0
+      maxValue: 0.5
+      scaleType: UNIT_LINEAR_SCALE
+    - parameterName: kernel_regularizer
+      type: DOUBLE
+      minValue: 0.00001
+      maxValue: 0.1
+      scaleType: UNIT_LOG_SCALE
+      
+    - parameterName: batch_size
+      type: INTEGER
+      minValue: 32
+      maxValue: 128
+      scaleType: UNIT_LOG_SCALE
+    - parameterName: learning_rate
+      type: DOUBLE
+      minValue: 0.00001
+      maxValue: 0.1
+      scaleType: UNIT_LOG_SCALE
+    - parameterName: category_weight
+      type: DOUBLE
+      minValue: 0.00001
+      maxValue: 2.0
+      scaleType: UNIT_LINEAR_SCALE
