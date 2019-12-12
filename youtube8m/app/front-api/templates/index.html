@@ -122,8 +122,9 @@ var app = new Vue({
                 axios
                     .post('/upload', formData, config)
                     .then(function(response) {
-                        console.log(response);
                         // response 処理
+                        console.log(response);
+                        location.reload();
                     })
                     .catch(function(error) {
                         // error 処理
