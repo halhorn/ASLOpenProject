@@ -1,76 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-</head>
-<body>
-  <div id=header>
-    <div id=logo background-color="red" color="white">▲</div>
-    <div id=title>ASLTube</div>
-    <div class=clear></div>
-  </div>
-  <div id=videoContainer>
-    <video id="video" width="640" src="{{ recent.public_url }}" type="video/mov" controls></video> </div>
-    <p><a href="{{ recent.public_url }}">{{ recent.filename }}</a></p>
-    <div>
-    <ul>
-    {% for pred in recent.predictions %}
-      <li>{{ pred.label }}({{ pred.probability }})</li>
-    {% endfor %}
-    </ul>
-    </div>
-  <div/>
-  <div id="app">
-    <div v-if="video">
-      [[videoName]]
-      <button v-bind:disabled="buttonDisabled" @click="removeVideo">Remove video</button>
-      <button v-bind:disabled="buttonDisabled" @click="submitVideo">Submit video</button>
-    </div>
-    <div v-else>
-      <input type="file" @change="onFileChange">
-    </div>
-  </div>
+  <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div id=header class="row p-2">
+        <div id=logo background-color="red" color="white">▲</div>
+        <div id=title>ASLTube</div>
+        <div class=clear></div>
+      </div>
+      <div class="row p-4" id="body">
+        <div class="container-fluid">
+          <div id=videoContainer class="row">
+            <video id="video" class="col-6" src="{{ recent.public_url }}" type="video/mov" controls></video>
+            <div class="col-6">
+              {% for pred in recent.predictions %}
+              <div>
+                <button type="button" class="btn m-1 pt-1 pb-1 pl-3 pr-3 {{ pred.btn_class }}" style="min-width: 140px">{{ pred.label }}</button>
+                <span class="probability-label">{{ pred.probability }}</span>
+                <span class="progress ml-1 mb-2">
+                  <span class="progress-bar" style="width: {{ pred.bar_length }}%"></span>
+                </span>
+              </div>
+              {% endfor %}
+            </div>
+            </div>
+          <div class="row mt-4 ml-0">
+            <h5>{{ recent.filename }}</h5>
+          </div>
 
-  <div id="oldList">
-  {% for elem in vlist if elem.job_id != recent.job_id %}
-     <div>
-       <a href="/show/{{ elem.job_id }}">{{ elem.filename }}</a>
-       {% for epred in elem.predictions %}
-         <span>{{ epred.label }}</span>
-       {% endfor %}
-     </div>
-  {% endfor %}
-  </div>
-</body>
-<style>
-#oldList {
-  margin-top: 20px;
-}
-#logo {
-  color: white;
-  background-color: red;
-  font-weight: bold;
-  font-size: 4px;
-  width: 11px;
-  margin: 5px 0px;
-  padding: 0px 8px;
-  float: left;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-}
-#title {
-  color: #333333;;
-  font-size: 16px;
-  padding-top: 4px;
-  float: left;
-  font-family: Impact, Tahoma, Segoe, sans-serif;
-  font-weight: bold;
-  margin-left: 2px;
-}
-.clear {
-  clear: both;
-}
+          <h5 class="mt-4 mb-0">Other Movies</h5>
+          <div id="app">
+            <div v-if="video">
+              [[videoName]]
+              <button v-bind:disabled="buttonDisabled" @click="removeVideo">Remove video</button>
+              <button v-bind:disabled="buttonDisabled" @click="submitVideo">Submit video</button>
+            </div>
+            <div v-else>
+              <div class="custom-file mt-4" style="width: 200px">
+                <input type="file" class="custom-file-input" id="customFile" @change="onFileChange">
+                <label class="custom-file-label" for="customFile" data-browse="参照">Upload Movie!</label>
+              </div>
+            </div>
+          </div>
+
+          <div id="oldList">
+            {% for elem in vlist if elem.job_id != recent.job_id %}
+            <div>
+              <a href="/show/{{ elem.job_id }}">
+                <video class="" width="100px" src="{{ elem.public_url }}" type="video/mov" preload="metadata"></video>
+                {{ elem.filename }}
+              </a>&nbsp;-&nbsp;
+              {% for epred in elem.predictions %}
+              <span>{{ epred.label }}</span>
+              {% endfor %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <style>
+   #oldList {
+     margin-top: 20px;
+   }
+   #menu-icon {
+     font-size: 25px;
+   }
+   #logo {
+     color: white;
+     background-color: red;
+     font-weight: bold;
+     font-size: 4px;
+     width: 25px;
+     margin: 5px 0px 5px 30px;
+     padding: 1px 8px;
+     float: left;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+     border-bottom-left-radius: 5px;
+     border-bottom-right-radius: 5px;
+   }
+   #title {
+     color: #333333;;
+     font-size: 16px;
+     padding-top: 2px;
+     float: left;
+     font-family: Impact, Tahoma, Segoe, sans-serif;
+     font-weight: bold;
+     margin-left: 2px;
+   }
+   .clear {
+     clear: both;
+   }
+   .btn-secondary {
+     background-color: #cccccc;
+     border-color: #cccccc;
+   }
+   .probability-label {
+     color: #888888;
+   }
+   .progress {
+     height: 8px;
+   }
+   #body {
+     background-color: #fafafa;
+   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
