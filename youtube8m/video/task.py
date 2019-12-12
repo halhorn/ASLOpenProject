@@ -1,7 +1,7 @@
 import argparse
 import json
 import os
-from . import estimator
+from .estimator_with_category import train_and_evaluate
 
 
 def execute():
@@ -20,6 +20,7 @@ def execute():
     parser.add_argument('--learning_rate', type=float)
     parser.add_argument('--train_steps', type=int)
     parser.add_argument('--eval_interval_step', type=int)
+    parser.add_argument('--category_weight', type=float)
 
     parser.add_argument(
         '--job-dir',
@@ -39,7 +40,7 @@ def execute():
         ).get('task', {}).get('trial', '')
     )
     # Run the training job
-    estimator.train_and_evaluate(output_dir, params)
+    train_and_evaluate(output_dir, params)
 
     
 if __name__ == '__main__':

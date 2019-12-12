@@ -1,11 +1,14 @@
 import tensorflow as tf
+from .category_util import get_id_category_id_table, CATEGORIES, CATEGORY_NUM
+
 CLASS_NUM = 3862
+
 RGB_DIM = 1024
 AUDIO_DIM = 128
+id_category_id_table = get_id_category_id_table(CLASS_NUM)
 
-
-def multi_hot(indices):
-    return tf.reduce_sum(tf.one_hot(indices, CLASS_NUM), axis=-2)
+def multi_hot(indices, class_num):
+    return tf.reduce_sum(tf.one_hot(indices, class_num), axis=-2)
 
 
 def parse_row(row):
@@ -16,8 +19,13 @@ def parse_row(row):
         "mean_audio": tf.VarLenFeature(tf.float32)
     }
     data, _ = tf.parse_single_sequence_example(row, context_features)
-    label = multi_hot(tf.sparse.to_dense(data['labels']))
-    label.set_shape([CLASS_NUM])
+    label_ids = tf.sparse.to_dense(data['labels'])
+    label = multi_hot(label_ids, CLASS_NUM)
+    category, _ = tf.unique(tf.gather(id_category_id_table, label_ids))
+    category = multi_hot(category, CATEGORY_NUM)
+    label = tf.concat([label, category], axis=-1)
+    label.set_shape([CLASS_NUM + CATEGORY_NUM])
+    
     mean_rgb = tf.sparse.to_dense(data['mean_rgb'])
     mean_rgb.set_shape([RGB_DIM])
     mean_audio = tf.sparse.to_dense(data['mean_audio'])
