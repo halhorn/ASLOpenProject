@@ -1,0 +1,16 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+flask = "*"
+tensorflow = "==1.15"
+tensorflow-gan = "*"
+numpy = "*"
+pillow = "*"
+
+[requires]
+python_version = "2.7"

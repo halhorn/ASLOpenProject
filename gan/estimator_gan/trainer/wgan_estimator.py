@@ -141,7 +141,7 @@ def serving_input_receiver_fn(noise_dims):
         receiver_tensors=receiver_tensors
     )
 
-def train_and_evaluate(params):
+def train_and_evaluate(params, build_only=False):
     estimator = tfgan.estimator.GANEstimator(
         model_dir=params['model_dir'],
         
@@ -157,6 +157,9 @@ def train_and_evaluate(params):
         #add_summaries=tfgan.estimator.SummaryType.IMAGES,
         add_summaries=None,
     )
+    if build_only:
+        return estimator
+
     train_spec = tf.estimator.TrainSpec(
         input_fn=lambda: input_fn(params["data_path"], tf.estimator.ModeKeys.TRAIN, params),
         max_steps=params["num_train_steps"]
