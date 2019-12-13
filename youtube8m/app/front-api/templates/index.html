@@ -34,8 +34,9 @@
           <div id="app">
             <div v-if="video">
               [[videoName]]
-              <button v-bind:disabled="buttonDisabled" @click="removeVideo">Remove video</button>
-              <button v-bind:disabled="buttonDisabled" @click="submitVideo">Submit video</button>
+              <button class="btn btn-secondary mt-1" v-bind:disabled="buttonDisabled" @click="removeVideo">Remove video</button>
+              <button class="btn btn-primary" v-bind:disabled="buttonDisabled" @click="submitVideo">Submit video</button>
+              <span class="ml-1" v-show="showUploading">Now Uploading...</span>
             </div>
             <div v-else>
               <div class="custom-file mt-4" style="width: 200px">
@@ -118,7 +119,8 @@ var app = new Vue({
         video: '',
         videoName: '',
         uploadFile: '',
-        buttonDisabled: false
+        buttonDisabled: false,
+        showUploading: false,
     },
     delimiters: ['[[', ']]'],
     methods: {
@@ -149,6 +151,7 @@ var app = new Vue({
         submitVideo: function(e) {
             if (!this.buttonDisabled) {
                 this.buttonDisabled = true
+                this.showUploading = true
                 var formData = new FormData();
                 formData.append('video', this.uploadFile);
                 var config = {
@@ -166,7 +169,8 @@ var app = new Vue({
                     .catch(function(error) {
                         // error 処理
                     })
-                this.buttonDisabled = false
+                this.buttonDisabled = false;
+                this.showUploading = true;
             }
         }
     },

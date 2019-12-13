@@ -92,11 +92,19 @@ def get_feature(job_id, filename):
   response = requests.get(url)
   return response.json()
 
+def render_recent(recent):
+    for pred in recent['predictions']:
+        pred['btn_class'] = 'btn-primary' if pred['probability'] > THRESHOLD else 'btn-secondary'
+        pred['bar_length'] = int(pred['probability'] * 100)
+    return recent
+
+
 @app.route("/", methods=["GET"])
 def index():
     with open(CACHE_VIDEO_INFO, "r") as f:
         video_info = json.loads(f.read())
-    return render_template('index.html', recent=video_info["list"][0], vlist=video_info["list"])
+    recent = video_info["list"][0]
+    return render_template('index.html', recent=render_recent(recent), vlist=video_info["list"])
 
 @app.route("/show/<job_id>", methods=["GET"])
 def show(job_id):
@@ -105,11 +113,8 @@ def show(job_id):
     for e in video_info["list"]:
         if e["job_id"] == job_id:
             recent = e
-            for pred in recent['predictions']:
-                pred['btn_class'] = 'btn-primary' if pred['probability'] > THRESHOLD else 'btn-secondary'
-                pred['bar_length'] = int(pred['probability'] * 100)
             break
-    return render_template('index.html', recent=recent, vlist=video_info["list"])
+    return render_template('index.html', recent=render_recent(recent), vlist=video_info["list"])
 
 @app.route("/upload", methods=["POST"])
 def upload():
