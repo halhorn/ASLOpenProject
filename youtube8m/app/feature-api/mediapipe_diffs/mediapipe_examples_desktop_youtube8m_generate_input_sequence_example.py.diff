@@ -1,0 +1,37 @@
+diff --git a/mediapipe/examples/desktop/youtube8m/generate_input_sequence_example.py b/mediapipe/examples/desktop/youtube8m/generate_
+input_sequence_example.py
+index 3a6b981..7fe91d8 100644
+--- a/mediapipe/examples/desktop/youtube8m/generate_input_sequence_example.py
++++ b/mediapipe/examples/desktop/youtube8m/generate_input_sequence_example.py
+@@ -37,7 +37,7 @@ def bytes23(string):
+ 
+ 
+ def main(argv):
+-  if len(argv) > 3:
++  if len(argv) > 4:
+     raise app.UsageError('Too many command-line arguments.')
+ 
+   if not flags.FLAGS.path_to_input_video:
+@@ -47,13 +47,15 @@ def main(argv):
+   if flags.FLAGS.clip_start_time_sec >= flags.FLAGS.clip_end_time_sec:
+     raise ValueError(
+         'The clip start time must be greater than the clip end time.')
++  if not flags.FLAGS.path_to_output_metadata:
++    raise ValueError('You must specify the path to the output video.')
+   metadata = tf.train.SequenceExample()
+   ms.set_clip_data_path(bytes23(flags.FLAGS.path_to_input_video), metadata)
+   ms.set_clip_start_timestamp(
+       flags.FLAGS.clip_start_time_sec * SECONDS_TO_MICROSECONDS, metadata)
+   ms.set_clip_end_timestamp(
+       flags.FLAGS.clip_end_time_sec * SECONDS_TO_MICROSECONDS, metadata)
+-  with open('/tmp/mediapipe/metadata.pb', 'wb') as writer:
++  with open(flags.FLAGS.path_to_output_metadata, 'wb') as writer:
+     writer.write(metadata.SerializeToString())
+ 
+ 
+@@ -62,4 +64,5 @@ if __name__ == '__main__':
+   flags.DEFINE_integer('clip_start_time_sec', 0,
+                        'Clip start timestamp in seconds')
+   flags.DEFINE_integer('clip_end_time_sec', 10, 'Clip end timestamp in seconds')
++  flags.DEFINE_string('path_to_output_metadata', "", 'metadata output path')
+   app.run(main)
