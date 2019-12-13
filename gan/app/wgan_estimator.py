@@ -1,0 +1,1 @@
+../estimator_gan/trainer/wgan_estimator.py
