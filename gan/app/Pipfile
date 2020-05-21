@@ -7,7 +7,7 @@ verify_ssl = true
 
 [packages]
 flask = "*"
-tensorflow = "==1.15"
+tensorflow = "==1.15.2"
 tensorflow-gan = "*"
 numpy = "*"
 pillow = "*"
